@@ -1,1 +1,1 @@
-{"adversary_count": 6, "tickets": {"adversaries": {"taxi": 10, "bus": 8, "metro": 4, "black_ticket": 0}, "spy": {"taxi": 4, "bus": 3, "metro": 3, "black_ticket": 5}}, "start_positions": [13,26,29,34,50,53,91,94,103,112,117,132,138,141,155,174,197,198], "reveal_points": [2,7,12,17,23]}
+{"adversary_count": 6, "tickets": {"adversaries": {"taxi": 10, "bus": 8, "metro": 4}, "spy": {"taxi": 4, "bus": 3, "metro": 3}}, "start_positions": [13,26,29,34,50,53,91,94,103,112,117,132,138,141,155,174,197,198], "reveal_points": [2,7,12,17,23]}
