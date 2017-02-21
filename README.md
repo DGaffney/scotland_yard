@@ -1,6 +1,6 @@
-# scotland_yard
+#Scotland Yard Network Analysis
 
-![Map Of Scotland Yard](https://raw.githubusercontent.com/DGaffney/scotland_yard/master/results/visualization.png)
+![Map Of Scotland Yard](https://raw.githubusercontent.com/DGaffney/scotland_yard/master/results/successful_transits.png)
 
 This is a repository that explores the network analysis attributes of the game [Scotland Yard](https://en.wikipedia.org/wiki/Scotland_Yard_(board_game)).
 
@@ -21,3 +21,5 @@ If you're a spy, you want to try to get to these positions - in two turns, this 
 185: 35 second-degree spaces
 163: 31 second-degree spaces
 124: 30 second-degree spaces
+
+##Successful Positions

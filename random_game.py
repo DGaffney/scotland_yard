@@ -82,7 +82,7 @@ spy_win_hits = np.array([0]*200)
 adversary_lose_hits = np.array([0]*200)
 spy_lose_hits = np.array([0]*200)
 adversary_win_hits = np.array([0]*200)
-for i in range(10000):
+for i in range(100000):
   taxi_graph = fill_in_graph(taxi_edges, nodes)
   bus_graph = fill_in_graph(bus_edges, nodes)
   metro_graph = fill_in_graph(metro_edges, nodes)
@@ -110,3 +110,5 @@ for i in range(10000):
     adversary_win_hits += np.array([graph.vs["adversary_transits"] for graph in graphs]).sum(0)
 
 [spy_win_hits/float(i), adversary_lose_hits/float(i), spy_lose_hits/float(i), adversary_win_hits/float(i)]
+
+spy_win_hits/[float(a) for a in adversary_lose_hits.tolist()]
