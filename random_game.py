@@ -27,10 +27,6 @@ taxi_edges = read_csv("data/taxi_map.txt")
 bus_edges = read_csv("data/bus_map.txt")
 metro_edges = read_csv("data/metro_map.txt")
 ferry_edges = read_csv("data/ferry_map.txt")
-taxi_graph = fill_in_graph(taxi_edges, nodes)
-bus_graph = fill_in_graph(bus_edges, nodes)
-metro_graph = fill_in_graph(metro_edges, nodes)
-ferry_graph = fill_in_graph(ferry_edges, nodes)
 start_info = json.loads(open("data/start_data.json").read())
 graphs = [taxi_graph, bus_graph, metro_graph, ferry_graph]
 graph_types = ["taxi", "bus", "metro"]
@@ -63,10 +59,9 @@ def decide_adversary_move(adversary, graphs, adversaries, adversary_type="random
       adversary['moves'][available_methods[action_type]] -= 1
       spy['moves'][available_methods[action_type]] += 1
       adversary['position'] = movement
+      graphs[action_type].vs[spy["position"]]['adversary_transits'] += 1
     else:
       adversary["state"] = "dead"
-  for graph in graphs:
-    graph.vs[spy["position"]]['adversary_transits'] += 1
   return adversary 
 
 def decide_spy_move(spy, graphs, adversaries, spy_type="random"):
@@ -78,10 +73,9 @@ def decide_spy_move(spy, graphs, adversaries, spy_type="random"):
       movement = available_moves[action_type][0]
       spy['moves'][available_methods[action_type]] -= 1
       spy['position'] = movement
+      graphs[action_type].vs[spy["position"]]['spy_transits'] += 1
     else:
       spy["state"] = "dead"
-  for graph in graphs:
-    graph.vs[spy["position"]]['spy_transits'] += 1
   return spy 
 
 spy_win_hits = np.array([0]*200)
@@ -89,6 +83,11 @@ adversary_lose_hits = np.array([0]*200)
 spy_lose_hits = np.array([0]*200)
 adversary_win_hits = np.array([0]*200)
 for i in range(10000):
+  taxi_graph = fill_in_graph(taxi_edges, nodes)
+  bus_graph = fill_in_graph(bus_edges, nodes)
+  metro_graph = fill_in_graph(metro_edges, nodes)
+  ferry_graph = fill_in_graph(ferry_edges, nodes)
+  graphs = [taxi_graph, bus_graph, metro_graph, ferry_graph]
   print i
   np.random.shuffle(start_info["start_positions"])
   spy_start = start_info["start_positions"][0]
@@ -96,7 +95,7 @@ for i in range(10000):
   adversaries = [{"role": "adversary", "state": "alive", "position": a_s, "moves": copy.deepcopy(start_info["tickets"]["adversaries"])} for a_s in adversary_starts]
   spy = {"role": "spy", "state": "alive", "position": spy_start, "moves": start_info["tickets"]["spy"]}
   moves = 0
-  while moves < 23 and spy["position"] not in [a["position"] for a in adversaries] and "alive" in [a["state"] for a in adversaries]:
+  while moves < 23 and spy["position"] not in [a["position"] for a in adversaries] and[a["state"] for a in adversaries].count("alive") > 0:
     spy = decide_spy_move(spy, graphs, adversaries)
     new_adversaries = []
     for adversary in adversaries:
@@ -110,4 +109,4 @@ for i in range(10000):
     spy_lose_hits += np.array([graph.vs["spy_transits"] for graph in graphs]).sum(0)
     adversary_win_hits += np.array([graph.vs["adversary_transits"] for graph in graphs]).sum(0)
 
-[spy_win_hits, adversary_lose_hits, spy_lose_hits, adversary_win_hits]
+[spy_win_hits/float(i), adversary_lose_hits/float(i), spy_lose_hits/float(i), adversary_win_hits/float(i)]
