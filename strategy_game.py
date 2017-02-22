@@ -147,6 +147,8 @@ def decide_adversary_move(adversary, graphs, adversaries, moves, reveal_points, 
       adversary['moves'][move_method] -= 1
       spy['moves'][move_method] += 1
       adversary['position'] = next_move
+      adversary['transits'].append(next_move)
+      adversary['transit_types'].append(move_method)
       graphs[graph_types.index(move_method)].vs[spy["position"]]['adversary_transits'] += 1
     else:
       adversary["state"] = "dead"
@@ -169,24 +171,29 @@ def decide_spy_move(spy, graphs, adversaries, spy_type="random"):
     indices = [nodes.index(n) for n in edge]
     tmp_graph.add_edges([(indices[0], indices[1])])
   available_methods, available_count, available_moves = moves_for_player(spy, adversaries, graphs)
-  adversary_positions = [a["position"] for a in adversaries if a['state'] != "dead"]
-  cur_distance = np.mean([len(tmp_graph.get_shortest_paths(spy["position"], a["position"])[0]) for a in adversaries])
-  distance_sets = []
-  for available_move_group in available_moves:
-    distance_set = []
-    for available_move in available_move_group:
-      adversary_distances = [len(tmp_graph.get_shortest_paths(available_move, a["position"])[0]) for a in adversaries]
-      distance_set.append(np.mean(adversary_distances))
-    distance_sets.append(distance_set)
-  print(distance_sets)
-  min_dists = [sorted(ds)[-1] for ds in distance_sets]
-  max_min_dist = sorted(min_dists)[-1]
-  transit_type = available_methods[min_dists.index(max_min_dist)]
-  next_move = available_moves[min_dists.index(max_min_dist)][distance_sets[min_dists.index(max_min_dist)].index(max_min_dist)]
-  spy["last_transit_type"] = transit_type
-  spy['moves'][transit_type] -= 1
-  spy['position'] = next_move
-  graphs[graph_types.index(transit_type)].vs[next_move]['spy_transits'] += 1
+  if [available_methods, available_count, available_moves] == [[], [], []]:
+    spy['state'] = 'dead'
+  else:
+    adversary_positions = [a["position"] for a in adversaries if a['state'] != "dead"]
+    cur_distance = np.mean([len(tmp_graph.get_shortest_paths(spy["position"], a["position"])[0]) for a in adversaries])
+    distance_sets = []
+    for available_move_group in available_moves:
+      distance_set = []
+      for available_move in available_move_group:
+        adversary_distances = [len(tmp_graph.get_shortest_paths(available_move, a["position"])[0]) for a in adversaries]
+        distance_set.append(np.mean(adversary_distances))
+      distance_sets.append(distance_set)
+    print(distance_sets)
+    min_dists = [sorted(ds)[-1] for ds in distance_sets]
+    max_min_dist = sorted(min_dists)[-1]
+    transit_type = available_methods[min_dists.index(max_min_dist)]
+    next_move = available_moves[min_dists.index(max_min_dist)][distance_sets[min_dists.index(max_min_dist)].index(max_min_dist)]
+    spy["last_transit_type"] = transit_type
+    spy['moves'][transit_type] -= 1
+    spy['transit_types'].append(transit_type)
+    spy['transits'].append(next_move)
+    spy['position'] = next_move
+    graphs[graph_types.index(transit_type)].vs[next_move]['spy_transits'] += 1
   return spy 
 
 spy_win_hits = np.array([0]*200)
@@ -215,7 +222,7 @@ for i in range(1000):
   spy = {"transits": [spy_start], "transit_types": [], "role": "spy", "state": "alive", "position": spy_start, "moves": copy.deepcopy(start_info["tickets"]["spy"])}
   moves = 0
   adversary_moves = []
-  while moves < 23 and spy["position"] not in [a["position"] for a in adversaries] and[a["state"] for a in adversaries].count("alive") > 0:
+  while spy['state'] != "dead" and moves < 23 and spy["position"] not in [a["position"] for a in adversaries] and[a["state"] for a in adversaries].count("alive") > 0:
     print(moves)
     spy = decide_spy_move(spy, graphs, adversaries)
     new_adversaries = []
