@@ -93,7 +93,7 @@ for i in range(100000):
   spy_start = start_info["start_positions"][0]
   adversary_starts = start_info["start_positions"][1:7]
   adversaries = [{"role": "adversary", "state": "alive", "position": a_s, "moves": copy.deepcopy(start_info["tickets"]["adversaries"])} for a_s in adversary_starts]
-  spy = {"role": "spy", "state": "alive", "position": spy_start, "moves": start_info["tickets"]["spy"]}
+  spy = {"role": "spy", "state": "alive", "position": spy_start, "moves": copy.deepcopy(start_info["tickets"]["spy"])}
   moves = 0
   while moves < 23 and spy["position"] not in [a["position"] for a in adversaries] and[a["state"] for a in adversaries].count("alive") > 0:
     spy = decide_spy_move(spy, graphs, adversaries)
