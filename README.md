@@ -22,4 +22,6 @@ If you're a spy, you want to try to get to these positions - in two turns, this 
 * 163: 31 second-degree spaces
 * 124: 30 second-degree spaces
 
-##Successful Positions
+##Simulating Scotland Yard
+
+As the spy moves around the board, they are transiting the various stations, or in network terms, nodes. Some nodes are connected to many other nodes, which means that there are many ways to escape that particular node, but also many ways to get to that node - if any of the six adversaries land on the node the spy currently sits on, the spy loses. At every point, each player has several methods of transit

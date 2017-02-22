@@ -109,6 +109,3 @@ for i in range(100000):
     spy_lose_hits += np.array([graph.vs["spy_transits"] for graph in graphs]).sum(0)
     adversary_win_hits += np.array([graph.vs["adversary_transits"] for graph in graphs]).sum(0)
 
-[spy_win_hits/float(i), adversary_lose_hits/float(i), spy_lose_hits/float(i), adversary_win_hits/float(i)]
-
-spy_win_hits/[float(a) for a in adversary_lose_hits.tolist()]
