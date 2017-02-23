@@ -45,7 +45,7 @@ Spy's that win tend towards the Metro stations and then towards the extremities,
 
 Adversaries stick more around central high transit nodes, as they are more likely to be hypothesized during turns of Spy ambiguity: 
 
-![Winning Adversaries Transitions](https://raw.githubusercontent.com/DGaffney/scotland_yard/master/results/spy_win_transit_density.png)
+![Winning Adversaries Transitions](https://raw.githubusercontent.com/DGaffney/scotland_yard/master/results/adversary_win_coverage.png)
 
 Transits per node are highly linear when plotted by total Adversary vs Spy transits:
 
